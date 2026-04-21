@@ -1,0 +1,99 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "OpenPI Server (pi05_libero ckpt)",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "program": "${workspaceFolder}/scripts/serve_policy.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "OPENPI_DATA_HOME": "${workspaceFolder}/dataset/ckpt",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+        "JAX_DISABLE_JIT": "1",
+        "JAX_TRACEBACK_FILTERING": "off"
+      },
+      "args": [
+        "--port",
+        "8000",
+        "policy:checkpoint",
+        "--policy.config",
+        "pi05_libero",
+        "--policy.dir",
+        "${workspaceFolder}/dataset/ckpt/openpi-assets/checkpoints/pi05_libero"
+      ]
+    },
+    {
+      "name": "LIBERO Spatial Eval Debug (with log, osmesa)",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/examples/libero/.venv/bin/python",
+      "program": "${workspaceFolder}/examples/libero/eval_with_log.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/third_party/libero",
+        "MUJOCO_GL": "osmesa",
+        "PYOPENGL_PLATFORM": "osmesa",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64"
+      },
+      "args": [
+        "--args.host",
+        "127.0.0.1",
+        "--args.port",
+        "8000",
+        "--args.task-suite-name",
+        "libero_spatial",
+        "--args.num-trials-per-task",
+        "1",
+        "--args.txt-log-path",
+        "data/libero/eval_summary_debug.txt",
+        "--args.csv-log-path",
+        "data/libero/eval_episode_results_debug.csv"
+      ]
+    },
+    {
+      "name": "LIBERO Spatial Eval Full (with log, osmesa)",
+      "type": "debugpy",
+      "request": "launch",
+      "python": "${workspaceFolder}/examples/libero/.venv/bin/python",
+      "program": "${workspaceFolder}/examples/libero/eval_with_log.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/third_party/libero",
+        "MUJOCO_GL": "osmesa",
+        "PYOPENGL_PLATFORM": "osmesa",
+        "LD_LIBRARY_PATH": "/usr/local/cuda/compat/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64"
+      },
+      "args": [
+        "--args.host",
+        "127.0.0.1",
+        "--args.port",
+        "8000",
+        "--args.task-suite-name",
+        "libero_spatial",
+        "--args.num-trials-per-task",
+        "1",
+        "--args.txt-log-path",
+        "data/libero/eval_summary.txt",
+        "--args.csv-log-path",
+        "data/libero/eval_episode_results.csv"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug pi0.5 on libero_spatial (server + eval debug)",
+      "configurations": [
+        "OpenPI Server (pi05_libero ckpt)",
+        "LIBERO Spatial Eval Debug (with log, osmesa)"
+      ]
+    }
+  ]
+}
